@@ -57,6 +57,24 @@ name2legendloc = {
     'ss5': 'upper right',
 }
 
+name2xticks = {
+    'full_slab': np.linspace(0, 1, 5),
+    'half_slab': np.linspace(0, 1, 5),
+    'reedp1': np.linspace(0, 8, 9),
+    'ss0': np.linspace(0, 5, 6),
+    'ss1': np.linspace(0, 5, 6),
+    'ss5': np.linspace(0, 5, 6),
+}
+
+name2yticks = {
+    'full_slab': np.linspace(0.5, 1, 3),
+    'half_slab': np.linspace(0, 2, 5),
+    'reedp1': np.linspace(-0.5, 2, 6),
+    'ss0': np.linspace(0.5, 1, 3),
+    'ss1': np.linspace(0, 1, 5),
+    'ss5': np.linspace(0, 1, 5),
+}
+
 LOSS_LIMITS = (1e-4, 8e3)
 
 
@@ -92,7 +110,9 @@ def run(name, deck, extra_options=None):
                        loss_limits=LOSS_LIMITS,
                        flux_limits=name2fluxlimits[name],
                        title='~',
-                       legend_loc=name2legendloc[name])
+                       legend_loc=name2legendloc[name],
+                       xticks=name2xticks[name],
+                       yticks=name2yticks[name])
 
 
 def run_existing_input(name, extra_options=None):

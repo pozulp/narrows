@@ -86,7 +86,7 @@ def print_algorithm2pair(args, algorithm2pair, suffix):
 
 
 def plot_movie(args, npzfile, loss_limits=None, flux_limits=None, title=None,
-               legend_loc=None):
+               legend_loc=None, xticks=None, yticks=None):
     plotname = 'flux'
     algorithm2z_flux_pair = get_algorithm2z_flux_pair(npzfile)
     (nn_z, _) = algorithm2z_flux_pair['nn']
@@ -135,6 +135,11 @@ def plot_movie(args, npzfile, loss_limits=None, flux_limits=None, title=None,
 
         ax1.set_xlabel('z coordinate')
         ax1.set_ylabel(r'$\phi(z)$')
+
+        if xticks is not None:
+            ax1.set_xticks(xticks)
+        if yticks is not None:
+            ax1.set_yticks(yticks)
 
         ax2.set_ylabel('loss', color='r')
         ax2.set_ylim(ymin=min_loss, ymax=max_loss)
