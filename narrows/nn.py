@@ -15,7 +15,7 @@ class ANNSlabSolver(object):
     def __init__(self, N, n_nodes, edges, sigma_t, sigma_s0, sigma_s1, source,
                  gamma_l=50, gamma_r=50, learning_rate=1e-3, eps=1e-8,
                  tensorboard=False, interval=500, gpu=False, ahistory=False,
-                 hinterval=1, max_num_iter=100000):
+                 hinterval=1, actfun='torch.nn.Tanh', max_num_iter=100000):
         '''
         Parameters
         ==========
@@ -51,6 +51,8 @@ class ANNSlabSolver(object):
             Record loss and flux arrays every hinterval iterations
         hinterval : int
             The number of interations between recordings
+        actfun : str
+            The activation function
         max_num_iter : int
             The maximum number of iterations before we quit trying to converge
         '''
@@ -114,7 +116,7 @@ class ANNSlabSolver(object):
                 write('terse', 'Skipping tensorboard')
                 write('moderate', e, error=True)
 
-        self._build_model(summary_writer)
+        self._build_model(actfun, summary_writer)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(),
                                           lr=learning_rate)
@@ -132,12 +134,16 @@ class ANNSlabSolver(object):
 
         self.max_num_iter = max_num_iter
 
-    def _build_model(self, summary_writer=None):
+    def _build_model(self, actfun, summary_writer=None):
         '''
         Build neural network model.
         '''
+        namespace = globals()
+        exec(f'myactfun = {actfun}()', namespace)
+        myactfun = namespace['myactfun']
+
         model = torch.nn.Sequential(torch.nn.Linear(1, self.n_nodes),
-                                    torch.nn.Tanh(),
+                                    myactfun,
                                     torch.nn.Linear(self.n_nodes, self.N),)
         if summary_writer:
             summary_writer.add_graph(model, self.z)

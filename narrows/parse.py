@@ -76,6 +76,7 @@ class _Ctrl():
                  write_nn=False,
                  ahistory=False,
                  hinterval=1,
+                 actfun='torch.nn.Tanh',
                  max_num_iter=100000,
                  sn_epsilon=1e-6,
                  num_particles=1e6,
@@ -100,6 +101,7 @@ class _Ctrl():
         self.write_nn = bool(write_nn)
         self.ahistory = bool(ahistory)
         self.hinterval = int(hinterval)
+        self.actfun = str(actfun)
         self.max_num_iter = int(max_num_iter)
         self.sn_epsilon = float(sn_epsilon)
         self.num_particles = int(num_particles)
@@ -128,6 +130,8 @@ class _Ctrl():
         assert self.interval > 0, 'interval must be > 0'
 
         assert self.hinterval > 0, 'hinterval must be > 0'
+
+        # no assert to check validity of actfun unfortunately
 
         assert self.max_num_iter > 0, 'max_num_iter must be > 0'
 
