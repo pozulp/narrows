@@ -58,6 +58,7 @@ def _create_nn_object(deck, mesh):
                     gpu=deck.ctrl.gpu,
                     ahistory=deck.ctrl.ahistory,
                     hinterval=deck.ctrl.hinterval,
+                    optim=deck.ctrl.optim,
                     max_num_iter=deck.ctrl.max_num_iter)
     return nn_solver
 

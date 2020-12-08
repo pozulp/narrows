@@ -15,7 +15,7 @@ class ANNSlabSolver(object):
     def __init__(self, N, n_nodes, edges, sigma_t, sigma_s0, sigma_s1, source,
                  gamma_l=50, gamma_r=50, learning_rate=1e-3, eps=1e-8,
                  tensorboard=False, interval=500, gpu=False, ahistory=False,
-                 hinterval=1, max_num_iter=100000):
+                 hinterval=1, optim='torch.optim.Adam', max_num_iter=100000):
         '''
         Parameters
         ==========
@@ -51,6 +51,8 @@ class ANNSlabSolver(object):
             Record loss and flux arrays every hinterval iterations
         hinterval : int
             The number of interations between recordings
+        optim : str
+            The optimizer
         max_num_iter : int
             The maximum number of iterations before we quit trying to converge
         '''
@@ -116,8 +118,12 @@ class ANNSlabSolver(object):
 
         self._build_model(summary_writer)
 
-        self.optimizer = torch.optim.Adam(self.model.parameters(),
-                                          lr=learning_rate)
+        namespace = locals()
+        code = f'myoptim = {optim}(self.model.parameters(), lr=learning_rate)'
+        exec(code, globals(), namespace)
+        myoptim = namespace['myoptim']
+
+        self.optimizer = myoptim
 
         self.gamma_l = gamma_l
         self.gamma_r = gamma_r
